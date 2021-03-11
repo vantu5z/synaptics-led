@@ -1,0 +1,1 @@
+cmd_/home/vantu5z/git/synaptics-led/synaptics-led/mouse/Module.symvers := sed 's/ko$$/o/' /home/vantu5z/git/synaptics-led/synaptics-led/mouse/modules.order | scripts/mod/modpost  -a   -o /home/vantu5z/git/synaptics-led/synaptics-led/mouse/Module.symvers -e -i Module.symvers  -N -T -
