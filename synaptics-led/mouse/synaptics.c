@@ -26,6 +26,7 @@
 #include <linux/input/mt.h>
 #include <linux/serio.h>
 #include <linux/libps2.h>
+#include <linux/leds.h>
 #include <linux/rmi.h>
 #include <linux/i2c.h>
 #include <linux/slab.h>
@@ -728,6 +729,141 @@ static void synaptics_pt_create(struct psmouse *psmouse)
 	serio_register_port(serio);
 }
 
+#if 1
+/*
+ * LED handling:
+ * Some Synaptics devices have an embeded LED at the top-left corner.
+ */
+
+struct synaptics_led {
+	struct psmouse *psmouse;
+	struct work_struct work;
+	struct led_classdev cdev;
+};
+
+static void synaptics_set_led(struct psmouse *psmouse, int on)
+{
+	int i;
+	unsigned char cmd = on ? 0x88 : 0x10;
+
+	ps2_begin_command(&psmouse->ps2dev);
+	if (__ps2_command(&psmouse->ps2dev, NULL, PSMOUSE_CMD_SETSCALE11))
+		goto out;
+	for (i = 6; i >= 0; i -= 2) {
+		unsigned char d = (cmd >> i) & 3;
+		if (__ps2_command(&psmouse->ps2dev, &d, PSMOUSE_CMD_SETRES))
+			goto out;
+	}
+	cmd = 0x0a;
+	__ps2_command(&psmouse->ps2dev, &cmd, PSMOUSE_CMD_SETRATE);
+ out:
+	ps2_end_command(&psmouse->ps2dev);
+}
+
+static void synaptics_led_work(struct work_struct *work)
+{
+	struct synaptics_led *led;
+
+	led = container_of(work, struct synaptics_led, work);
+	synaptics_set_led(led->psmouse, led->cdev.brightness);
+}
+
+static void synaptics_led_cdev_brightness_set(struct led_classdev *cdev,
+					      enum led_brightness value)
+{
+	struct synaptics_led *led;
+
+	led = container_of(cdev, struct synaptics_led, cdev);
+	schedule_work(&led->work);
+}
+
+static void synaptics_sync_led(struct psmouse *psmouse)
+{
+	struct synaptics_data *priv = psmouse->private;
+
+	if (priv->led)
+		synaptics_set_led(psmouse, priv->led->cdev.brightness);
+}
+
+static bool synaptics_has_led(struct synaptics_data *priv)
+{
+	printk(KERN_NOTICE "synaptics: led: checking for led\n");
+
+	if (!priv->info.ext_cap_0c) {
+		printk(KERN_NOTICE "synaptics: led: !priv->ext_cap_0c is true... no led\n");
+		return false;
+	}
+
+	printk(KERN_NOTICE "synaptics: led: your product ID is %2lx\n", SYN_CAP_PRODUCT_ID(priv->info.ext_cap));
+
+	/* FIXME: LED is supposedly detectable in cap0c[1] 0x20, but it seems
+	 * not working on real machines.
+	 * So we check the product id to be sure.
+	 * Added ID 0x24 experimental.
+	 */
+
+	if (SYN_CAP_PRODUCT_ID(priv->info.ext_cap) != 0x24 &&
+       SYN_CAP_PRODUCT_ID(priv->info.ext_cap) != 0xe4 &&
+	    SYN_CAP_PRODUCT_ID(priv->info.ext_cap) != 0x64 &&
+	    SYN_CAP_PRODUCT_ID(priv->info.ext_cap) != 0x84) {
+		printk(KERN_NOTICE "synaptics: led: your product ID is not in the whitelist\n");
+		return false;
+	}
+
+	if (!(priv->info.ext_cap_0c & 0x2000) &&
+	    (priv->info.capabilities & 0xd000fd) != 0xd00071) {
+		printk(KERN_NOTICE "synaptics: led: failed capabilities check\n");
+		return false;
+	}
+
+	printk(KERN_NOTICE "synaptics: led: looks like you have one\n");
+
+	return true;
+}
+
+static int synaptics_init_led(struct psmouse *psmouse)
+{
+	struct synaptics_data *priv = psmouse->private;
+	struct synaptics_led *led;
+	int err;
+
+	if (!synaptics_has_led(priv))
+		return 0;
+	printk(KERN_INFO "synaptics: support LED control\n");
+	led = kzalloc(sizeof(struct synaptics_led), GFP_KERNEL);
+	if (!led)
+		return -ENOMEM;
+	led->psmouse = psmouse;
+	INIT_WORK(&led->work, synaptics_led_work);
+	led->cdev.name = "psmouse::synaptics";
+	led->cdev.brightness_set = synaptics_led_cdev_brightness_set;
+	led->cdev.flags = LED_CORE_SUSPENDRESUME;
+	err = led_classdev_register(NULL, &led->cdev);
+	if (err < 0) {
+		kfree(led);
+		return err;
+	}
+	priv->led = led;
+	return 0;
+}
+
+static void synaptics_free_led(struct psmouse *psmouse)
+{
+	struct synaptics_data *priv = psmouse->private;
+
+	if (!priv->led)
+		return;
+	cancel_work_sync(&priv->led->work);
+	synaptics_set_led(psmouse, 0);
+	led_classdev_unregister(&priv->led->cdev);
+	kfree(priv->led);
+}
+#else
+#define synaptics_init_led(ps)	0
+#define synaptics_free_led(ps)	do {} while (0)
+#define synaptics_sync_led(ps)	do {} while (0)
+#endif
+
 /*****************************************************************************
  *	Functions to interpret the absolute mode packets
  ****************************************************************************/
@@ -1412,6 +1548,7 @@ static void synaptics_disconnect(struct psmouse *psmouse)
 		device_remove_file(&psmouse->ps2dev.serio->dev,
 				   &psmouse_attr_disable_gesture.dattr);
 
+	synaptics_free_led(psmouse);
 	synaptics_reset(psmouse);
 	kfree(priv);
 	psmouse->private = NULL;
@@ -1471,6 +1608,8 @@ static int synaptics_reconnect(struct psmouse *psmouse)
 			    priv->info.ext_cap, info.ext_cap);
 		return -ENXIO;
 	}
+
+	synaptics_sync_led(psmouse);
 
 	return 0;
 }
@@ -1589,6 +1728,9 @@ static int synaptics_init_ps2(struct psmouse *psmouse,
 		     info->model_id,
 		     info->capabilities, info->ext_cap, info->ext_cap_0c,
 		     info->ext_cap_10, info->board_id, info->firmware_id);
+
+	if (synaptics_init_led(psmouse) < 0)
+		goto init_fail;
 
 	err = set_input_params(psmouse, priv);
 	if (err) {

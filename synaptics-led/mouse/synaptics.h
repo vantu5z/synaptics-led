@@ -177,6 +177,8 @@ struct synaptics_device_info {
 	u32 x_min, y_min;	/* Min coordinates (from FW) */
 };
 
+struct synaptics_led;
+
 struct synaptics_data {
 	struct synaptics_device_info info;
 
@@ -201,6 +203,7 @@ struct synaptics_data {
 	bool					press;
 	bool					report_press;
 	bool					is_forcepad;
+	struct synaptics_led *led;
 };
 
 void synaptics_module_init(void);
