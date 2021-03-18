@@ -7,7 +7,7 @@ Originaly patches comes from Takashi Iwai from SUSE for supporting the LED in Sy
 This [video](https://www.youtube.com/watch?v=fj1Yf4ASag0) show how touchpads looks like.
 
 ## Upstream
-Kernel sources get from [repo.or.cz](https://repo.or.cz/linux.git) at [linux-rolling-stable](https://repo.or.cz/linux.git/shortlog/refs/heads/linux-rolling-stable) head.
+Kernel sources get from [repo.or.cz](https://repo.or.cz/linux.git) at [linux-rolling-stable](https://repo.or.cz/linux.git/shortlog/refs/heads/linux-rolling-stable) head. Changes will be monitored and applied.
 ```
 git archive --remote="git://repo.or.cz/linux.git" "linux-rolling-stable" drivers/input/mouse | tar -x
 ```
@@ -18,6 +18,8 @@ This module work with [xf86-input-synaptics-led](https://aur.archlinux.org/packa
 ## Build
 Module can build from sources and compressed by `xz`:
 ```
+git clone https://github.com/vantu5z/synaptics-led.git
+cd synaptics-led
 make -C "/usr/lib/modules/$(uname -r)/build" M="$PWD" psmouse.ko
 xz psmouse.ko
 ```
