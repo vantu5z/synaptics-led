@@ -1,6 +1,6 @@
-diff -ur upstream/mouse/Kconfig patched/mouse/Kconfig
---- upstream/mouse/Kconfig	2021-03-17 19:11:47.000000000 +0300
-+++ patched/mouse/Kconfig	2021-03-18 14:24:23.990147000 +0300
+diff -ur upstream/Kconfig mouse/Kconfig
+--- upstream/Kconfig	2021-03-20 12:51:14.000000000 +0300
++++ mouse/Kconfig	2021-03-22 11:45:19.777536626 +0300
 @@ -101,6 +101,15 @@
  
  	  If unsure, say Y.
@@ -17,9 +17,9 @@ diff -ur upstream/mouse/Kconfig patched/mouse/Kconfig
  config MOUSE_PS2_LIFEBOOK
  	bool "Fujitsu Lifebook PS/2 mouse protocol extension" if EXPERT
  	default y
-diff -ur upstream/mouse/synaptics.c patched/mouse/synaptics.c
---- upstream/mouse/synaptics.c	2021-03-17 19:11:47.000000000 +0300
-+++ patched/mouse/synaptics.c	2021-03-18 14:24:23.990147000 +0300
+diff -ur upstream/synaptics.c mouse/synaptics.c
+--- upstream/synaptics.c	2021-06-23 15:44:11.000000000 +0300
++++ mouse/synaptics.c	2021-06-28 08:27:29.208335517 +0300
 @@ -26,6 +26,7 @@
  #include <linux/input/mt.h>
  #include <linux/serio.h>
@@ -170,7 +170,7 @@ diff -ur upstream/mouse/synaptics.c patched/mouse/synaptics.c
  /*****************************************************************************
   *	Functions to interpret the absolute mode packets
   ****************************************************************************/
-@@ -1412,6 +1548,7 @@
+@@ -1415,6 +1551,7 @@
  		device_remove_file(&psmouse->ps2dev.serio->dev,
  				   &psmouse_attr_disable_gesture.dattr);
  
@@ -178,7 +178,7 @@ diff -ur upstream/mouse/synaptics.c patched/mouse/synaptics.c
  	synaptics_reset(psmouse);
  	kfree(priv);
  	psmouse->private = NULL;
-@@ -1472,6 +1609,8 @@
+@@ -1475,6 +1612,8 @@
  		return -ENXIO;
  	}
  
@@ -187,7 +187,7 @@ diff -ur upstream/mouse/synaptics.c patched/mouse/synaptics.c
  	return 0;
  }
  
-@@ -1590,6 +1729,9 @@
+@@ -1593,6 +1732,9 @@
  		     info->capabilities, info->ext_cap, info->ext_cap_0c,
  		     info->ext_cap_10, info->board_id, info->firmware_id);
  
@@ -197,9 +197,9 @@ diff -ur upstream/mouse/synaptics.c patched/mouse/synaptics.c
  	err = set_input_params(psmouse, priv);
  	if (err) {
  		psmouse_err(psmouse,
-diff -ur upstream/mouse/synaptics.h patched/mouse/synaptics.h
---- upstream/mouse/synaptics.h	2021-03-17 19:11:47.000000000 +0300
-+++ patched/mouse/synaptics.h	2021-03-18 14:24:23.990147000 +0300
+diff -ur upstream/synaptics.h mouse/synaptics.h
+--- upstream/synaptics.h	2021-03-20 12:51:14.000000000 +0300
++++ mouse/synaptics.h	2021-03-22 11:45:16.794085572 +0300
 @@ -177,6 +177,8 @@
  	u32 x_min, y_min;	/* Min coordinates (from FW) */
  };
