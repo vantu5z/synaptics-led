@@ -7,7 +7,7 @@ Originaly patches comes from Takashi Iwai from SUSE for supporting the LED in Sy
 This [video](https://www.youtube.com/watch?v=fj1Yf4ASag0) show how these touchpads looks like.
 
 ## Upstream
-Kernel sources are taken from [repo.or.cz](https://repo.or.cz/linux.git) at [linux-rolling-stable](https://repo.or.cz/linux.git/shortlog/refs/heads/linux-rolling-stable) head. Changes will be monitored and applied.
+Kernel sources are taken from [repo.or.cz](https://repo.or.cz/linux.git) at [linux-rolling-stable](https://repo.or.cz/linux.git/shortlog/refs/heads/linux-rolling-stable) (or `linux-5.x.y`) head. Changes will be monitored and applied.
 ```
 git archive --remote="git://repo.or.cz/linux.git" "linux-rolling-stable" drivers/input/mouse | tar -x
 ```
