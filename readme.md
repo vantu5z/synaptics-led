@@ -29,7 +29,7 @@ Module `psmouse.ko.xz` should be installed to directory:<BR>
 `/usr/lib/modules/<kernel_version>/extramodules/`
 
 AUR [synaptics-led](https://aur.archlinux.org/packages/synaptics-led/) or [synaptics-led-dkms](https://aur.archlinux.org/packages/synaptics-led-dkms/) packages can be used for Arch Linux users.  
-[DKMS](https://wiki.archlinux.org/title/Dynamic_Kernel_Module_Support) version advantage - you don't need to reinstall module manualy after every kernel update.  
+[DKMS](https://wiki.archlinux.org/title/Dynamic_Kernel_Module_Support) version advantage - you don't need to reinstall module manually after every kernel update.  
 
 ## Load
 To load or reload module you can use `modprobe`:
