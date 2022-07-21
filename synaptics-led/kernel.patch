@@ -1,5 +1,5 @@
 diff -ur upstream/Kconfig mouse/Kconfig
---- upstream/Kconfig	2021-03-20 12:51:14.000000000 +0300
+--- upstream/Kconfig	2022-05-15 21:20:54.000000000 +0300
 +++ mouse/Kconfig	2021-03-22 11:45:19.777536626 +0300
 @@ -101,6 +101,15 @@
  
@@ -18,8 +18,8 @@ diff -ur upstream/Kconfig mouse/Kconfig
  	bool "Fujitsu Lifebook PS/2 mouse protocol extension" if EXPERT
  	default y
 diff -ur upstream/synaptics.c mouse/synaptics.c
---- upstream/synaptics.c	2021-06-23 15:44:11.000000000 +0300
-+++ mouse/synaptics.c	2021-06-28 08:27:29.208335517 +0300
+--- upstream/synaptics.c	2022-07-12 17:42:27.000000000 +0300
++++ mouse/synaptics.c	2022-07-21 13:01:58.049896055 +0300
 @@ -26,6 +26,7 @@
  #include <linux/input/mt.h>
  #include <linux/serio.h>
@@ -28,7 +28,7 @@ diff -ur upstream/synaptics.c mouse/synaptics.c
  #include <linux/rmi.h>
  #include <linux/i2c.h>
  #include <linux/slab.h>
-@@ -728,6 +729,141 @@
+@@ -729,6 +730,141 @@
  	serio_register_port(serio);
  }
  
@@ -170,7 +170,7 @@ diff -ur upstream/synaptics.c mouse/synaptics.c
  /*****************************************************************************
   *	Functions to interpret the absolute mode packets
   ****************************************************************************/
-@@ -1415,6 +1551,7 @@
+@@ -1416,6 +1552,7 @@
  		device_remove_file(&psmouse->ps2dev.serio->dev,
  				   &psmouse_attr_disable_gesture.dattr);
  
@@ -178,7 +178,7 @@ diff -ur upstream/synaptics.c mouse/synaptics.c
  	synaptics_reset(psmouse);
  	kfree(priv);
  	psmouse->private = NULL;
-@@ -1475,6 +1612,8 @@
+@@ -1476,6 +1613,8 @@
  		return -ENXIO;
  	}
  
@@ -187,7 +187,7 @@ diff -ur upstream/synaptics.c mouse/synaptics.c
  	return 0;
  }
  
-@@ -1593,6 +1732,9 @@
+@@ -1594,6 +1733,9 @@
  		     info->capabilities, info->ext_cap, info->ext_cap_0c,
  		     info->ext_cap_10, info->board_id, info->firmware_id);
  
@@ -198,7 +198,7 @@ diff -ur upstream/synaptics.c mouse/synaptics.c
  	if (err) {
  		psmouse_err(psmouse,
 diff -ur upstream/synaptics.h mouse/synaptics.h
---- upstream/synaptics.h	2021-03-20 12:51:14.000000000 +0300
+--- upstream/synaptics.h	2022-05-15 21:20:54.000000000 +0300
 +++ mouse/synaptics.h	2021-03-22 11:45:16.794085572 +0300
 @@ -177,6 +177,8 @@
  	u32 x_min, y_min;	/* Min coordinates (from FW) */
