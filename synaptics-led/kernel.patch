@@ -1,6 +1,6 @@
-diff -ur upstream/Kconfig mouse/Kconfig
---- upstream/Kconfig	2022-05-15 21:20:54.000000000 +0300
-+++ mouse/Kconfig	2022-10-19 09:45:24.217471642 +0300
+diff -ur -x .git upstream/Kconfig mouse/Kconfig
+--- upstream/Kconfig	2022-12-27 11:53:12.089064999 +0300
++++ mouse/Kconfig	2022-12-27 11:50:41.485630046 +0300
 @@ -101,6 +101,15 @@
  
  	  If unsure, say Y.
@@ -17,9 +17,9 @@ diff -ur upstream/Kconfig mouse/Kconfig
  config MOUSE_PS2_LIFEBOOK
  	bool "Fujitsu Lifebook PS/2 mouse protocol extension" if EXPERT
  	default y
-diff -ur upstream/synaptics.c mouse/synaptics.c
---- upstream/synaptics.c	2022-10-15 09:02:59.000000000 +0300
-+++ mouse/synaptics.c	2022-10-19 09:45:24.217471642 +0300
+diff -ur -x .git upstream/synaptics.c mouse/synaptics.c
+--- upstream/synaptics.c	2022-12-27 11:53:12.092398484 +0300
++++ mouse/synaptics.c	2022-12-27 11:50:41.485630046 +0300
 @@ -26,6 +26,7 @@
  #include <linux/input/mt.h>
  #include <linux/serio.h>
@@ -28,7 +28,7 @@ diff -ur upstream/synaptics.c mouse/synaptics.c
  #include <linux/rmi.h>
  #include <linux/i2c.h>
  #include <linux/slab.h>
-@@ -728,6 +729,141 @@
+@@ -730,6 +731,141 @@
  	serio_register_port(serio);
  }
  
@@ -170,7 +170,7 @@ diff -ur upstream/synaptics.c mouse/synaptics.c
  /*****************************************************************************
   *	Functions to interpret the absolute mode packets
   ****************************************************************************/
-@@ -1415,6 +1551,7 @@
+@@ -1417,6 +1553,7 @@
  		device_remove_file(&psmouse->ps2dev.serio->dev,
  				   &psmouse_attr_disable_gesture.dattr);
  
@@ -178,7 +178,7 @@ diff -ur upstream/synaptics.c mouse/synaptics.c
  	synaptics_reset(psmouse);
  	kfree(priv);
  	psmouse->private = NULL;
-@@ -1475,6 +1612,8 @@
+@@ -1477,6 +1614,8 @@
  		return -ENXIO;
  	}
  
@@ -187,7 +187,7 @@ diff -ur upstream/synaptics.c mouse/synaptics.c
  	return 0;
  }
  
-@@ -1593,6 +1732,9 @@
+@@ -1595,6 +1734,9 @@
  		     info->capabilities, info->ext_cap, info->ext_cap_0c,
  		     info->ext_cap_10, info->board_id, info->firmware_id);
  
@@ -197,9 +197,9 @@ diff -ur upstream/synaptics.c mouse/synaptics.c
  	err = set_input_params(psmouse, priv);
  	if (err) {
  		psmouse_err(psmouse,
-diff -ur upstream/synaptics.h mouse/synaptics.h
---- upstream/synaptics.h	2022-05-15 21:20:54.000000000 +0300
-+++ mouse/synaptics.h	2022-10-19 09:45:24.217471642 +0300
+diff -ur -x .git upstream/synaptics.h mouse/synaptics.h
+--- upstream/synaptics.h	2022-12-27 11:53:12.092398484 +0300
++++ mouse/synaptics.h	2022-12-27 11:50:41.485630046 +0300
 @@ -177,6 +177,8 @@
  	u32 x_min, y_min;	/* Min coordinates (from FW) */
  };
