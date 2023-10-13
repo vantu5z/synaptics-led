@@ -1,6 +1,6 @@
 diff -ur -x .git upstream/Kconfig mouse/Kconfig
---- upstream/Kconfig	2022-12-27 11:53:12.089064999 +0300
-+++ mouse/Kconfig	2022-12-27 11:50:41.485630046 +0300
+--- upstream/Kconfig	2023-10-13 13:09:46.219129163 +0300
++++ mouse/Kconfig	2023-10-13 13:09:46.952489934 +0300
 @@ -101,6 +101,15 @@
  
  	  If unsure, say Y.
@@ -18,8 +18,8 @@ diff -ur -x .git upstream/Kconfig mouse/Kconfig
  	bool "Fujitsu Lifebook PS/2 mouse protocol extension" if EXPERT
  	default y
 diff -ur -x .git upstream/synaptics.c mouse/synaptics.c
---- upstream/synaptics.c	2022-12-27 11:53:12.092398484 +0300
-+++ mouse/synaptics.c	2022-12-27 11:50:41.485630046 +0300
+--- upstream/synaptics.c	2023-10-13 13:11:10.245606268 +0300
++++ mouse/synaptics.c	2023-10-13 13:11:11.002301246 +0300
 @@ -26,6 +26,7 @@
  #include <linux/input/mt.h>
  #include <linux/serio.h>
@@ -28,7 +28,7 @@ diff -ur -x .git upstream/synaptics.c mouse/synaptics.c
  #include <linux/rmi.h>
  #include <linux/i2c.h>
  #include <linux/slab.h>
-@@ -730,6 +731,141 @@
+@@ -729,6 +730,141 @@
  	serio_register_port(serio);
  }
  
@@ -170,7 +170,7 @@ diff -ur -x .git upstream/synaptics.c mouse/synaptics.c
  /*****************************************************************************
   *	Functions to interpret the absolute mode packets
   ****************************************************************************/
-@@ -1417,6 +1553,7 @@
+@@ -1416,6 +1552,7 @@
  		device_remove_file(&psmouse->ps2dev.serio->dev,
  				   &psmouse_attr_disable_gesture.dattr);
  
@@ -178,7 +178,7 @@ diff -ur -x .git upstream/synaptics.c mouse/synaptics.c
  	synaptics_reset(psmouse);
  	kfree(priv);
  	psmouse->private = NULL;
-@@ -1477,6 +1614,8 @@
+@@ -1476,6 +1613,8 @@
  		return -ENXIO;
  	}
  
@@ -187,7 +187,7 @@ diff -ur -x .git upstream/synaptics.c mouse/synaptics.c
  	return 0;
  }
  
-@@ -1595,6 +1734,9 @@
+@@ -1594,6 +1733,9 @@
  		     info->capabilities, info->ext_cap, info->ext_cap_0c,
  		     info->ext_cap_10, info->board_id, info->firmware_id);
  
@@ -198,7 +198,7 @@ diff -ur -x .git upstream/synaptics.c mouse/synaptics.c
  	if (err) {
  		psmouse_err(psmouse,
 diff -ur -x .git upstream/synaptics.h mouse/synaptics.h
---- upstream/synaptics.h	2022-12-27 11:53:12.092398484 +0300
+--- upstream/synaptics.h	2023-01-18 13:58:34.000000000 +0300
 +++ mouse/synaptics.h	2022-12-27 11:50:41.485630046 +0300
 @@ -177,6 +177,8 @@
  	u32 x_min, y_min;	/* Min coordinates (from FW) */
