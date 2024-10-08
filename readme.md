@@ -19,7 +19,7 @@ This module work with [xf86-input-synaptics-led](https://aur.archlinux.org/packa
 Module can be build from sources and compressed by `xz`:
 ```
 git clone https://github.com/vantu5z/synaptics-led.git
-cd synaptics-led
+cd synaptics-led/synaptics-led/mouse
 make -C "/usr/lib/modules/$(uname -r)/build" M="$PWD" psmouse.ko
 xz psmouse.ko
 ```
