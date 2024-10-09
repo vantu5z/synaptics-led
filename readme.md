@@ -4,7 +4,7 @@ This is patched kernel module for touchpads with enable/disable LED button in le
 
 Originally patches comes from Takashi Iwai from SUSE for supporting the LED in Synaptics touchpads.
 
-This [video](https://www.youtube.com/watch?v=fj1Yf4ASag0) show how these touchpads looks like.
+This [video](https://www.youtube.com/watch?v=sAERSh9Yhlw) show how these touchpads looks like.
 
 ## Upstream
 Kernel sources are taken from [repo.or.cz](https://repo.or.cz/linux.git) at [linux-rolling-stable](https://repo.or.cz/linux.git/shortlog/refs/heads/linux-rolling-stable) (or `linux-6.x.y`) head. Changes will be monitored and applied.
