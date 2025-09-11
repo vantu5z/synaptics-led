@@ -18,8 +18,8 @@ diff -ur -x .git upstream/Kconfig mouse/Kconfig
  	bool "Fujitsu Lifebook PS/2 mouse protocol extension" if EXPERT
  	default y
 diff -ur -x .git upstream/synaptics.c mouse/synaptics.c
---- upstream/synaptics.c	2024-10-04 17:38:57.000000000 +0300
-+++ mouse/synaptics.c	2024-10-08 10:41:05.121028858 +0300
+--- upstream/synaptics.c	2025-09-11 05:49:26.000000000 +0300
++++ mouse/synaptics.c	2025-09-11 09:14:48.320061193 +0300
 @@ -26,6 +26,7 @@
  #include <linux/input/mt.h>
  #include <linux/serio.h>
@@ -28,7 +28,7 @@ diff -ur -x .git upstream/synaptics.c mouse/synaptics.c
  #include <linux/rmi.h>
  #include <linux/i2c.h>
  #include <linux/slab.h>
-@@ -731,6 +732,141 @@
+@@ -765,6 +766,141 @@
  	serio_register_port(serio);
  }
  
@@ -170,7 +170,7 @@ diff -ur -x .git upstream/synaptics.c mouse/synaptics.c
  /*****************************************************************************
   *	Functions to interpret the absolute mode packets
   ****************************************************************************/
-@@ -1418,6 +1554,7 @@
+@@ -1451,6 +1587,7 @@
  		device_remove_file(&psmouse->ps2dev.serio->dev,
  				   &psmouse_attr_disable_gesture.dattr);
  
@@ -178,7 +178,7 @@ diff -ur -x .git upstream/synaptics.c mouse/synaptics.c
  	synaptics_reset(psmouse);
  	kfree(priv);
  	psmouse->private = NULL;
-@@ -1478,6 +1615,8 @@
+@@ -1511,6 +1648,8 @@
  		return -ENXIO;
  	}
  
@@ -187,7 +187,7 @@ diff -ur -x .git upstream/synaptics.c mouse/synaptics.c
  	return 0;
  }
  
-@@ -1596,6 +1735,9 @@
+@@ -1629,6 +1768,9 @@
  		     info->capabilities, info->ext_cap, info->ext_cap_0c,
  		     info->ext_cap_10, info->board_id, info->firmware_id);
  
@@ -198,8 +198,8 @@ diff -ur -x .git upstream/synaptics.c mouse/synaptics.c
  	if (err) {
  		psmouse_err(psmouse,
 diff -ur -x .git upstream/synaptics.h mouse/synaptics.h
---- upstream/synaptics.h	2023-01-18 13:58:34.000000000 +0300
-+++ mouse/synaptics.h	2022-12-27 11:50:41.485630046 +0300
+--- upstream/synaptics.h	2025-09-11 05:49:26.000000000 +0300
++++ mouse/synaptics.h	2025-09-11 09:10:27.201987213 +0300
 @@ -177,6 +177,8 @@
  	u32 x_min, y_min;	/* Min coordinates (from FW) */
  };
@@ -209,7 +209,7 @@ diff -ur -x .git upstream/synaptics.h mouse/synaptics.h
  struct synaptics_data {
  	struct synaptics_device_info info;
  
-@@ -201,6 +203,7 @@
+@@ -202,6 +204,7 @@
  	bool					press;
  	bool					report_press;
  	bool					is_forcepad;
