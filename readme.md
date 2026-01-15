@@ -39,6 +39,30 @@ sudo modprobe psmouse
 ```
 or just reboot PC.
 
-## Links
+# Wayland
+Wayland use `libinput` and I don't know how to detect doubletap on touchpad LED.
+You still can toggle LED by `brightnessctl` but touchpad should be toggled manually.
+## Hyprland
+This script can be used to toggle touchpad (find device name by `hyprctl devices`):
+```
+state=$(brightnessctl -d psmouse::synaptics g)
+
+if [ "$state" == 0 ] || [ "$1" == "off" ] && [ "$1" != "on" ]
+then
+    hyprctl keyword "device[synps/2-synaptics-touchpad]:enabled" false
+    brightnessctl -d psmouse::synaptics s 100%
+else
+    hyprctl keyword "device[synps/2-synaptics-touchpad]:enabled" true
+    brightnessctl -d psmouse::synaptics s 0%
+fi
+```
+And hyprland config:
+```
+bind = $mainMod, T, exec, ~/.local/bin/my_hyprland_touchpad
+#bind = $mainMod, t, exec, ~/.local/bin/my_hyprland_touchpad off
+#bind = $mainMod Shift, t, exec, ~/.local/bin/my_hyprland_touchpad on
+```
+
+# Links
 https://github.com/perusio/xorg-synaptics-led-support <BR>
 https://github.com/mmonaco/PKGBUILDs/tree/master/synaptics-led
